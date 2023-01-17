@@ -85,7 +85,7 @@ body {
     cursor: pointer;
 }
 
-.loadFileButton {
+.load-file-button {
     cursor: pointer;
     margin-left: 8px;
     color: #31727a;
@@ -96,4 +96,23 @@ body {
     border: 0;
     height: 40px;
     width: 220px;
+}
+
+.container-steps {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.div-steps {
+    display: flex;
+    align-items: center;
+}
+
+.div-steps-label {
+    margin-top: 5px;
+    margin-left: 46px;
+    width: 50px;
+    font-family: Helvetica, sans-serif;
+    font-size: 14px;
 }
