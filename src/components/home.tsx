@@ -2,6 +2,8 @@ import { ChangeEvent, JSXElementConstructor, Key, ReactElement, ReactFragment, R
 import { BsJustify, BsPlusCircleFill } from 'react-icons/bs'
 import { FcOk, FcExpired, FcDocument } from 'react-icons/fc'
 
+import api from '../services/api';
+
 import "../assets/index.css"
 
 import JSZip from 'jszip';
@@ -19,7 +21,46 @@ export function Home() {
 
     const [selectedFilesList, setSelectedFilesList] = useState<File[]>([]);
     
+    //Arquivo singular já convertido para envio 
+    const [fileExport, setFileExport] = useState<File>();
+
+    //Controlar a porcentagem de andamento do processo
+    const [progress, setProgress] = useState(0);
+
+    //Controlar se o processo foi finalizado
+    const [fullProgress, setFullProgress] = useState(false);
+
+    //Controlar se há alguma interrupção no processo
+    const [warning, setWarning] = useState(true);
+
+    //TESTAR PORCENTAGEM DE PROGRESSO e ALERTA NO PROCESSO
+    const warningProcess = false;
+    const progressPCB = 90;
+
     // const [imageTest, setImageTest] = useState<any>(); 
+
+    // CÓDIGO PARA REQUISIÇÃO POST USANDO AXIOS - (LEMBRAR DE RETIRAR O MONGOOSE)
+    // useEffect(() => {
+    //     api
+    //       .post("https://minhaapi/novo-usuario",{
+    //             nome: “Romulo”,
+    //             sobrenome: “Sousa”
+    //  })
+    //       .then((response) => setUser(response.data))
+    //       .catch((err) => {
+    //         console.error("ops! ocorreu um erro" + err);
+    //       });
+    //   }, []);
+
+     // CÓDIGO PARA REQUISIÇÃO GET USANDO AXIOS - (LEMBRAR DE RETIRAR O MONGOOSE)
+    // useEffect(() => {
+    //     api
+    //       .get("/users/romulo27")
+    //       .then((response) => setUser(response.data))
+    //       .catch((err) => {
+    //         console.error("ops! ocorreu um erro" + err);
+    //       });
+    //   }, []);
 
     const extractFile = (file: File) => {
         JSZip.loadAsync(file).then(zip => {
@@ -62,18 +103,6 @@ export function Home() {
         setNumberStatus(1)
         window.location.reload(false);
     }
-    //Controlar a porcentagem de andamento do processo
-    const [progress, setProgress] = useState(0);
-
-    //Controlar se o processo foi finalizado
-    const [fullProgress, setFullProgress] = useState(false);
-
-    //Controlar se há alguma interrupção no processo
-    const [warning, setWarning] = useState(true);
-
-    //TESTAR PORCENTAGEM DE PROGRESSO e ALERTA NO PROCESSO
-    const warningProcess = false;
-    const progressPCB = 90;
 
     // Função para ler a porcentagem de progresso da marcação da PCB
     // NECESSÁRIO ATUALIZAR RECEBENDO O VALOR DO SISTEMA EMBARCADO
