@@ -3,17 +3,16 @@ import { motion, animate } from 'framer-motion'
 
 import "../assets/progressbar.css"
 
-export function ProgressBar({value}) {
+export function ProgressBar({value}: any) {
     
-    const progressTextRef = useRef(null);
+    const [progressText, setprogressText] = useState(0); 
 
     useEffect(() => {
-        const progressText = progressTextRef.current?.textContent;
         if (progressText != null) {
-            animate(parseInt(progressText),value, {
+            animate(progressText,value, {
                 duration: 2,
                 onUpdate: (cv) => {
-                    progressTextRef.current.textContent = cv.toFixed(0)
+                    setprogressText(cv.toFixed(0))
                 }
             })
         }
@@ -34,10 +33,11 @@ export function ProgressBar({value}) {
                         />
                 </div>
                 <div className="progressbar-text-container">
-                        <p ref={progressTextRef}>0</p>
+                        <p>{progressText}</p>
                         <p>%</p>
                 </div>
             </div>  
         </div>
     );
 }
+

@@ -168,7 +168,7 @@ body {
 }
 
 .form-control {
-    font-family: system-ui; sans-serif;
+    font-family: system-ui, sans-serif;
     font-size: 24px;
     font-weight: bold;
     line-height: 1.1;

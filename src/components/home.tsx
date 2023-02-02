@@ -2,14 +2,14 @@ import { ChangeEvent, JSXElementConstructor, Key, ReactElement, ReactFragment, R
 import { BsJustify, BsPlusCircleFill } from 'react-icons/bs'
 import { FcOk, FcExpired, FcDocument } from 'react-icons/fc'
 
-import api from '../services/api';
+import axios from 'axios';
 
+import {ProgressBar} from './progressBar'
 import "../assets/index.css"
 
 import JSZip from 'jszip';
 
 import { Steps } from './steps'
-import { ProgressBar } from './progressBar'
 import { TbExchange } from 'react-icons/tb';
 
 export function Home() {
@@ -21,8 +21,8 @@ export function Home() {
 
     const [selectedFilesList, setSelectedFilesList] = useState<File[]>([]);
     
-    //Arquivo singular já convertido para envio 
-    const [fileExport, setFileExport] = useState<File>();
+    //Controlar o arquivo que será enviado para a requisição
+    const [firstFile, setFirstFile] = useState('');
 
     //Controlar a porcentagem de andamento do processo
     const [progress, setProgress] = useState(0);
@@ -37,31 +37,11 @@ export function Home() {
     const warningProcess = false;
     const progressPCB = 90;
 
-    // const [imageTest, setImageTest] = useState<any>(); 
+    const api = axios.create({
+        baseURL: 'http://localhost:3334',
+    });
 
-    // CÓDIGO PARA REQUISIÇÃO POST USANDO AXIOS - (LEMBRAR DE RETIRAR O MONGOOSE)
-    // useEffect(() => {
-    //     api
-    //       .post("https://minhaapi/novo-usuario",{
-    //             nome: “Romulo”,
-    //             sobrenome: “Sousa”
-    //  })
-    //       .then((response) => setUser(response.data))
-    //       .catch((err) => {
-    //         console.error("ops! ocorreu um erro" + err);
-    //       });
-    //   }, []);
-
-     // CÓDIGO PARA REQUISIÇÃO GET USANDO AXIOS - (LEMBRAR DE RETIRAR O MONGOOSE)
-    // useEffect(() => {
-    //     api
-    //       .get("/users/romulo27")
-    //       .then((response) => setUser(response.data))
-    //       .catch((err) => {
-    //         console.error("ops! ocorreu um erro" + err);
-    //       });
-    //   }, []);
-
+    // Função para extrair os arquivos de dentro do arquivo ZIP
     const extractFile = (file: File) => {
         JSZip.loadAsync(file).then(zip => {
             Object.keys(zip.files).forEach(filename => {
@@ -91,6 +71,18 @@ export function Home() {
         const file = filesList.find(f => f.name === e.target.name)
         file && setSelectedFilesList(files => [...files, file]);
         console.log([...selectedFilesList, file])
+
+        // convertendo arquivo selecionado para base64
+        const reader = new FileReader();
+        file && reader.readAsDataURL(file);
+        reader.onloadend = (e) => {
+            //base64file
+            const filebase64 = e.target?.result?.toString().split(',')[1]
+            console.log('arquivo base 64')
+            console.log(filebase64)
+            filebase64 && setFirstFile(filebase64)
+        }
+
       } else {
         const newListWithoutItem = selectedFilesList.filter(f => f.name !== e.target.name)
         setSelectedFilesList(newListWithoutItem)
@@ -98,40 +90,22 @@ export function Home() {
 
       }
     }
+
     
-    const handleFinishProcess = () => {
-        setNumberStatus(1)
-        window.location.reload(false);
+    async function handlePostRequisition() {
+        // const fs = require("fs");
+        // const fileTeste = fs.readFileSync("file.txt", "utf-8"); //ALTERAR FILE.TXT PARA O QUE?
+        // const fileData = fileTeste.toString();
+        
+        api.post("/file", firstFile)
+          .then(response => {
+            console.log("File sent successfully");
+          })
+          .catch(error => {
+            console.error("Error sending file: ", error);
+          });
     }
-
-    // Função para ler a porcentagem de progresso da marcação da PCB
-    // NECESSÁRIO ATUALIZAR RECEBENDO O VALOR DO SISTEMA EMBARCADO
-    useEffect(() => {
-        FullProgress();
-        WarningProcess();
-        const id = setProgress(progressPCB)
-    },[]);
-
-    // Função para verificar finalização do processo
-    function WarningProcess() {
-        if (warningProcess) {
-            setWarning(true);
-        }
-        else {
-            setWarning(false);
-        }
-    }
-
-    // Função para verificar finalização do processo
-    function FullProgress() {
-        if (progressPCB==100) {
-            setFullProgress(true);
-        }
-        else {
-            setFullProgress(false);
-        }
-    }
-
+    
     const hiddenFileInput = useRef<HTMLInputElement>(null)
 
     const handleClick = () => {
@@ -158,6 +132,32 @@ export function Home() {
         }    
     }
 
+    // Função para finalizar processo
+    const handleFinishProcess = () => {
+        setNumberStatus(1)
+        window.location.reload();
+    }
+
+    // Função para ler a porcentagem de progresso da marcação da PCB
+    // NECESSÁRIO ATUALIZAR RECEBENDO O VALOR DO SISTEMA EMBARCADO
+    useEffect(() => {
+        FullProgress();
+        WarningProcess();
+        setProgress(progressPCB)
+    },[]);
+
+    // Função para verificar finalização do processo
+    function WarningProcess() {
+        warningProcess ? setWarning(true) :  setWarning(false);
+    }
+
+    // Função para verificar finalização do processo
+    function FullProgress() {
+        const complete = 100;
+        progress == complete ? setFullProgress(true) : setFullProgress(false);
+
+    }
+
     return (
         <>
         <div className='container-steps'>
@@ -178,7 +178,7 @@ export function Home() {
                             </div>
                         </button>
                         <input ref={hiddenFileInput} type="file" hidden accept='.zip' onChange={handleFileChange} />
-                        {/* <button className="btn" onClick={handleNextStep}>Proxima Página</button> */}
+                        <button className="btn" onClick={handleNextStep}>Proxima Página</button>
                     </>}
 
 
@@ -198,7 +198,7 @@ export function Home() {
                                 </div>
 
                                 <div style={{width: '100%', display: 'flex', justifyContent:'flex-end'}}>
-                                    <button className="btn-select-files" onClick={handleNextStep}>
+                                    <button className="btn-select-files" onClick={handlePostRequisition}>
                                         <div>
                                             <TbExchange size={20}/>
                                             <span> Converter arquivos </span> 
@@ -207,7 +207,7 @@ export function Home() {
                                 </div>
                             </div>
                         </div>
-                        {/* <button className="btn" onClick={handleNextStep}>Proxima Página</button> */}
+                        <button className="btn" onClick={handleNextStep}>Proxima Página</button>
                     </>}
 
                     {numberStatus === 3 && <>
