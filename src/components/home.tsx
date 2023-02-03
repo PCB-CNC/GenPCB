@@ -2,6 +2,9 @@ import { ChangeEvent, JSXElementConstructor, Key, ReactElement, ReactFragment, R
 import { BsJustify, BsPlusCircleFill } from 'react-icons/bs'
 import { FcOk, FcExpired, FcDocument } from 'react-icons/fc'
 
+import api from '../services/api'
+
+
 import { sendFileString } from '../services/FileStringRequest'
 
 import {ProgressBar} from './progressBar'
@@ -39,7 +42,7 @@ export function Home() {
 
     //TESTAR PORCENTAGEM DE PROGRESSO e ALERTA NO PROCESSO
     const warningProcess = false;
-    const progressPCB = 1;
+    const progressPCB = 34;
 
     // Função para extrair os arquivos de dentro do arquivo ZIP
     const extractFile = (file: File) => {
@@ -161,15 +164,22 @@ export function Home() {
         window.location.reload();
     }
 
+    // -------------------------------------- FEEDBACK ------------------------------------------------- //
+    
     // Função para ler a porcentagem de progresso da marcação da PCB
-    // NECESSÁRIO ATUALIZAR RECEBENDO O VALOR DO SISTEMA EMBARCADO
-    useEffect(() => {
-        FullProgress();
-        WarningProcess();
-        setProgress(progressPCB)
-        console.log(progress)
-    },[]);
+    // useEffect(() => {
+    //     async function loadDevolutionsNotUrgency() {
+    //         const response = await api.get('COLOCAR URL');
 
+    //         setProgress(response.data.feedback)
+    //     }
+
+    //     FullProgress();
+    //     WarningProcess();
+    //     // setProgress(progressPCB)
+    // },[]);
+
+    
     // Função para verificar finalização do processo
     function WarningProcess() {
         warningProcess ? setWarning(true) :  setWarning(false);
