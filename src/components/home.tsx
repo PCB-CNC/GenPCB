@@ -2,7 +2,7 @@ import { ChangeEvent, JSXElementConstructor, Key, ReactElement, ReactFragment, R
 import { BsJustify, BsPlusCircleFill } from 'react-icons/bs'
 import { FcOk, FcExpired, FcDocument } from 'react-icons/fc'
 
-import axios from 'axios';
+import { sendFileString } from '../services/FileStringRequest'
 
 import {ProgressBar} from './progressBar'
 import "../assets/index.css"
@@ -37,10 +37,6 @@ export function Home() {
     const warningProcess = false;
     const progressPCB = 90;
 
-    const api = axios.create({
-        baseURL: 'http://localhost:3334',
-    });
-
     // Função para extrair os arquivos de dentro do arquivo ZIP
     const extractFile = (file: File) => {
         JSZip.loadAsync(file).then(zip => {
@@ -66,23 +62,36 @@ export function Home() {
         }
     }
 
+    const sendFile = async (fileString: string) => {
+        const res = await sendFileString(fileString)
+        
+        if(res.status === 200) {
+            console.log("string enviada porra!")
+            console.log(res.data)
+        } else {
+            console.log("ocorreu algum erro!")
+            console.log(res.status)
+        }
+    }
+
     const handleChangeChecked = (e: ChangeEvent<HTMLInputElement>) => {
       if(e.target.checked) {
         const file = filesList.find(f => f.name === e.target.name)
         file && setSelectedFilesList(files => [...files, file]);
         console.log([...selectedFilesList, file])
 
-        // convertendo arquivo selecionado para base64
         const reader = new FileReader();
-        file && reader.readAsDataURL(file);
-        reader.onloadend = (e) => {
-            //base64file
-            const filebase64 = e.target?.result?.toString().split(',')[1]
-            console.log('arquivo base 64')
-            console.log(filebase64)
-            filebase64 && setFirstFile(filebase64)
+        // file && reader.readAsDataURL(file);
+        file && reader.readAsText(file);
+        reader.onloadend = () => {
+            // const payload = reader?.result?.toString().split(',')[1]
+            console.log("essa e a string do arquivo ca")
+            const fileContentString = reader.result?.toString()
+            console.log(fileContentString)
+            fileContentString && sendFile(fileContentString)
+            // const payload = new Uint8Array(reader.result as ArrayBuffer);
+            // console.log(payload)
         }
-
       } else {
         const newListWithoutItem = selectedFilesList.filter(f => f.name !== e.target.name)
         setSelectedFilesList(newListWithoutItem)
