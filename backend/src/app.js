@@ -16,7 +16,8 @@ class App {
   middlewares() {
     this.server.use(cors());
     // this.server.use(express.json());
-    this.server.use(bodyParser.json({limit: '3000kb'}))
+    this.server.use(express.text());
+    // this.server.use(bodyParser.json({limit: '3000kb'}))
   }
 
   routes() {
