@@ -3,8 +3,6 @@ import routes from './routes';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 
-// import './database';
-
 class App {
   constructor() {
     this.server = express();

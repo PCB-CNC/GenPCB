@@ -167,17 +167,18 @@ export function Home() {
     // -------------------------------------- FEEDBACK ------------------------------------------------- //
     
     //Função para ler a porcentagem de progresso da marcação da PCB
-    useEffect(() => {
-        async function loadDevolutionsNotUrgency() {
-            const response = await api.get('/feedback');
+    // useEffect(() => {
+    //     async function getFeedback() {
+    //         const response = await api.get('/feedback');
 
-            setProgress(response.data.percentage)
-        }
+    //         setProgress(response.data.percentage)
+    //     }
 
-        FullProgress();
-        WarningProcess();
-        // setProgress(progressPCB)
-    },[]);
+    //     FullProgress();
+    //     WarningProcess();
+    //     getFeedback();
+    //     // setProgress(progressPCB)
+    // },[]);
 
     
     // Função para verificar finalização do processo
