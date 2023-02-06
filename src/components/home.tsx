@@ -166,18 +166,18 @@ export function Home() {
 
     // -------------------------------------- FEEDBACK ------------------------------------------------- //
     
-    // Função para ler a porcentagem de progresso da marcação da PCB
-    // useEffect(() => {
-    //     async function loadDevolutionsNotUrgency() {
-    //         const response = await api.get('COLOCAR URL');
+    //Função para ler a porcentagem de progresso da marcação da PCB
+    useEffect(() => {
+        async function loadDevolutionsNotUrgency() {
+            const response = await api.get('/feedback');
 
-    //         setProgress(response.data.feedback)
-    //     }
+            setProgress(response.data.percentage)
+        }
 
-    //     FullProgress();
-    //     WarningProcess();
-    //     // setProgress(progressPCB)
-    // },[]);
+        FullProgress();
+        WarningProcess();
+        // setProgress(progressPCB)
+    },[]);
 
     
     // Função para verificar finalização do processo
