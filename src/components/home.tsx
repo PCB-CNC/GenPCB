@@ -97,7 +97,7 @@ export function Home() {
                 console.log("ESSA É A STRING DO ARQUIVO SELECIONADO")
                 const fileContentString = reader.result?.toString()
                 fileContentString && setFileContent(fileContentString)
-                console.log(fileContent)
+                console.log(fileContentString)
         
         }
       } else {
