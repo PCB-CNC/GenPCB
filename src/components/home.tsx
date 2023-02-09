@@ -12,6 +12,8 @@ import "../assets/index.css"
 
 import JSZip from 'jszip';
 
+import {convertToPng} from './FileConvert.js'
+
 import { Steps } from './steps'
 import { TbExchange } from 'react-icons/tb';
 
@@ -88,6 +90,7 @@ export function Home() {
             const file = filesList.find(f => f.name === e.target.name)
             file && setSelectedFilesList(files => [...files, file]);
             console.log([...selectedFilesList, file])
+            convertToPng(file)
 
             const reader = new FileReader();
 
