@@ -120,6 +120,10 @@ export function Home() {
         hiddenFileInput.current?.click()
     }
 
+    const instructionConvert = () => {
+        setNumberStatus(-1)
+    }
+
     //Função para passar os STEPS manualmente
     const handleNextStep = () => {
         if(numberStatus==1) {
@@ -133,7 +137,10 @@ export function Home() {
         }
         if(numberStatus==4) {
             setNumberStatus(5)
-        }    
+        }          
+        if(numberStatus==-1) {
+            setNumberStatus(1)
+        }   
     }
 
     const handlePreviousStep = () => {
@@ -149,7 +156,13 @@ export function Home() {
         }
         if(numberStatus==5) {
             setNumberStatus(4)
-        }    
+        }  
+    }
+
+    // Já na página de Feedback, o usuário poderá enviar mais arquivos para contribuir no processo
+    const handleSendMore = () => {
+        setNumberStatus(2)
+        setSelectedFilesList([])
     }
 
     // Após finalização de alguma marcação, o usuário poderá voltar para selecionar/enviar mais arquivos para marcação
@@ -214,6 +227,13 @@ export function Home() {
                         </button>
                         <input ref={hiddenFileInput} type="file" hidden accept='.zip' onChange={handleFileChange} />
                         {/* <button className="btn" onClick={handleNextStep}>Proxima Página</button> */}
+                        <div style= {{ color: '#fff', fontWeight: 'bold', fontSize: '20px', marginTop: '100px',  marginLeft: '10px' }}>
+                            <button className='btn' onClick={instructionConvert}>
+                                <div>
+                                    <span> Como converter? </span>
+                                </div>
+                            </button>
+                        </div>
                     </>}
 
 
@@ -255,7 +275,7 @@ export function Home() {
                         {selectedFilesList.map(files =>
                           <p style={{color: '#2B676F', fontWeight: 'bold', fontSize: '25px'}} key={files.name}>{files.name}</p>
                         )}
-                            <button className="btn" onClick={handlePreviousStep}>Selecionar mais arquivos</button>
+                            {/* <button className="btn" onClick={handlePreviousStep}>Selecionar mais arquivos</button> */}
                             <button className="btn" onClick={handlePostRequisition}>Exportar</button>
                     </>}
 
@@ -290,6 +310,7 @@ export function Home() {
                             </div>
                         }
                         <ProgressBar value={progress}></ProgressBar>
+                        <button className="btn" onClick={handleSendMore}>Selecionar mais arquivos</button>
                         {fullProgress ?
                             <>
                                 <button style={{ backgroundColor: 'green' }} className="btn" onClick={handleSelectNewFiles}>Enviar outro arquivo</button>
@@ -298,6 +319,62 @@ export function Home() {
                             :
                             <></>
                         }
+                    </>}
+                    {numberStatus === -1 && <>
+                        <p style= {{ color: '#31727a', fontWeight: 'bold', fontSize: '20px', marginTop: '50px',  marginBottom: '20px' }}>
+                            Passo 1:
+                        </p>
+                        <div>
+                            <p style= {{ backgroundColor: '#FFF', padding: '20px', borderRadius: '20px', fontFamily: 'Helvetica, sans-serif', color: '#31727a', fontWeight: 'bold', fontSize: '20px',   marginBottom: '40px' }}>
+                            Coloque os arquivos .GERBER dentro da pasta chamada GERBER
+                                <br></br><br></br>
+                                Os arquivos deverão seguir o padrão de nomenclatura seguinte:
+                                <br></br><br></br>
+                                Gerber_TopLayer.GTL<br></br>
+                                Gerber_BottomLayer.GBL<br></br>
+                                Gerber_BoardOutlineLayer.GKO<br></br>
+                            </p>
+                        </div>
+                        <p style= {{ color: '#31727a', fontWeight: 'bold', fontSize: '20px', marginTop: '50px',  marginBottom: '20px' }}>
+                            Passo 2:
+                        </p>
+                        <div>
+                            <p style= {{ backgroundColor: '#FFF', padding: '20px', borderRadius: '20px', fontFamily: 'Helvetica, sans-serif', color: '#31727a', fontWeight: 'bold', fontSize: '20px',   marginBottom: '40px' }}>
+                            Com os arquivos seguindo a nomenclatura correta e estando dentro da pasta, rode o seguinte comando para liberar a permissão de execução do arquivo de conversão:
+                                <br></br><br></br>
+                            <div style= {{ marginLeft: '23%', width: '50%', backgroundColor: '#ddd', padding: '10px', borderRadius: '10px', fontFamily: 'Helvetica, sans-serif', color: '#31727a', fontWeight: 'bold', fontSize: '20px'}}>
+                                 chmod +x convert.sh
+                            </div>
+                            </p>
+                        </div>
+                        <p style= {{ color: '#31727a', fontWeight: 'bold', fontSize: '20px', marginTop: '50px',  marginBottom: '20px' }}>
+                            Passo 3:
+                        </p>
+                        <div>
+                            <p style= {{ backgroundColor: '#FFF', padding: '20px', borderRadius: '20px', fontFamily: 'Helvetica, sans-serif', color: '#31727a', fontWeight: 'bold', fontSize: '20px',   marginBottom: '40px' }}>
+                            Execute o script CONVERT através do seguinte comando:
+                                <br></br><br></br>
+                            <div style= {{ marginLeft: '23%', width: '50%', backgroundColor: '#ddd', padding: '10px', borderRadius: '10px', fontFamily: 'Helvetica, sans-serif', color: '#31727a', fontWeight: 'bold', fontSize: '20px'}}>
+                                ./convert.sh
+                            </div>
+                            </p>
+                        </div>
+                        <p style= {{ color: '#31727a', fontWeight: 'bold', fontSize: '20px', marginTop: '50px',  marginBottom: '20px' }}>
+                            Passo Final:
+                        </p>
+                        <div>
+                            <p style= {{ backgroundColor: '#FFF', padding: '20px', borderRadius: '20px', fontFamily: 'Helvetica, sans-serif', color: '#31727a', fontWeight: 'bold', fontSize: '20px',   marginBottom: '40px' }}>
+                            Após a execução do script, os arquivos GCODE serão gerados na pasta GCODE, com os nomes abaixo:
+                                <br></br><br></br>
+                                Top.gcode<br></br>
+                                Bottom.gcode<br></br>
+                                Outline.gcode<br></br>
+                                <br></br>
+                                <br></br>
+                           Será gerado um arquivo chamado gcode.ZIP. Esse será o arquivo para você enviar na próxima etapa!
+                            </p>
+                        </div>
+                            <button className="btn" onClick={handleNextStep}>Já fiz isso!</button>
                     </>}
                 </div>
             </div>
