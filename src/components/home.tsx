@@ -90,7 +90,7 @@ export function Home() {
             const file = filesList.find(f => f.name === e.target.name)
             file && setSelectedFilesList(files => [...files, file]);
             console.log([...selectedFilesList, file])
-            convertToPng(file)
+            convertToPng(file)  // passar esse arquivo para no body da requisição (fazer tudo pelo back)
 
             const reader = new FileReader();
 
