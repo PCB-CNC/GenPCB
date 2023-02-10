@@ -214,6 +214,62 @@ export function Home() {
 
             <div className='container' >
                 <div className='content'>
+                {numberStatus === -1 && <>
+                        <p style= {{ color: '#31727a', fontWeight: 'bold', fontSize: '20px', marginTop: '50px',  marginBottom: '20px' }}>
+                            Passo 1:
+                        </p>
+                        <div>
+                            <p style= {{ backgroundColor: '#FFF', padding: '20px', borderRadius: '20px', fontFamily: 'Helvetica, sans-serif', color: '#31727a', fontWeight: 'bold', fontSize: '20px',   marginBottom: '40px' }}>
+                            Tendo já baixado o repositório LOCAL_BASH_CONVERTER, acesse-o e coloque os arquivos .GERBER dentro da pasta chamada GERBER
+                                <br></br><br></br>
+                                Os arquivos deverão seguir o padrão de nomenclatura seguinte:
+                                <br></br><br></br>
+                                Gerber_TopLayer.GTL<br></br>
+                                Gerber_BottomLayer.GBL<br></br>
+                                Gerber_BoardOutlineLayer.GKO<br></br>
+                            </p>
+                        </div>
+                        <p style= {{ color: '#31727a', fontWeight: 'bold', fontSize: '20px', marginTop: '50px',  marginBottom: '20px' }}>
+                            Passo 2:
+                        </p>
+                        <div>
+                            <p style= {{ backgroundColor: '#FFF', padding: '20px', borderRadius: '20px', fontFamily: 'Helvetica, sans-serif', color: '#31727a', fontWeight: 'bold', fontSize: '20px',   marginBottom: '40px' }}>
+                            Com os arquivos seguindo a nomenclatura correta e estando dentro da pasta, rode o seguinte comando para liberar a permissão de execução do arquivo de conversão:
+                                <br></br><br></br>
+                            <div style= {{ marginLeft: '23%', width: '50%', backgroundColor: '#ddd', padding: '10px', borderRadius: '10px', fontFamily: 'Helvetica, sans-serif', color: '#31727a', fontWeight: 'bold', fontSize: '20px'}}>
+                                 chmod +x convert.sh
+                            </div>
+                            </p>
+                        </div>
+                        <p style= {{ color: '#31727a', fontWeight: 'bold', fontSize: '20px', marginTop: '50px',  marginBottom: '20px' }}>
+                            Passo 3:
+                        </p>
+                        <div>
+                            <p style= {{ backgroundColor: '#FFF', padding: '20px', borderRadius: '20px', fontFamily: 'Helvetica, sans-serif', color: '#31727a', fontWeight: 'bold', fontSize: '20px',   marginBottom: '40px' }}>
+                            Execute o script CONVERT através do seguinte comando:
+                                <br></br><br></br>
+                            <div style= {{ marginLeft: '23%', width: '50%', backgroundColor: '#ddd', padding: '10px', borderRadius: '10px', fontFamily: 'Helvetica, sans-serif', color: '#31727a', fontWeight: 'bold', fontSize: '20px'}}>
+                                ./convert.sh
+                            </div>
+                            </p>
+                        </div>
+                        <p style= {{ color: '#31727a', fontWeight: 'bold', fontSize: '20px', marginTop: '50px',  marginBottom: '20px' }}>
+                            Passo Final:
+                        </p>
+                        <div>
+                            <p style= {{ backgroundColor: '#FFF', padding: '20px', borderRadius: '20px', fontFamily: 'Helvetica, sans-serif', color: '#31727a', fontWeight: 'bold', fontSize: '20px',   marginBottom: '40px' }}>
+                            Após a execução do script, os arquivos GCODE serão gerados na pasta GCODE, com os nomes abaixo:
+                                <br></br><br></br>
+                                Top.gcode<br></br>
+                                Bottom.gcode<br></br>
+                                Outline.gcode<br></br>
+                                <br></br>
+                                <br></br>
+                           Será gerado um arquivo chamado gcode.ZIP. Esse será o arquivo para você enviar na próxima etapa!
+                            </p>
+                        </div>
+                            <button className="btn" onClick={handleNextStep}>Já fiz isso!</button>
+                    </>}
                     {numberStatus === 1 && <>
                         <p style= {{ color: '#fff', fontWeight: 'bold', fontSize: '20px', marginTop: '100px',  marginBottom: '40px' }}>
                             { !file && 'Selecione no seu computador o arquivo ZIP com os etapas necessárias para marcação '}
@@ -310,71 +366,16 @@ export function Home() {
                             </div>
                         }
                         <ProgressBar value={progress}></ProgressBar>
-                        <button className="btn" onClick={handleSendMore}>Selecionar mais arquivos</button>
                         {fullProgress ?
                             <>
                                 <button style={{ backgroundColor: 'green' }} className="btn" onClick={handleSelectNewFiles}>Enviar outro arquivo</button>
                                 <button style={{ backgroundColor: 'green' }} className="btn" onClick={handleFinishProcess}>Finalizar Processo</button> 
                             </>
                             :
-                            <></>
+                            <>
+                                <button className="btn" onClick={handleSendMore}>Selecionar mais arquivos</button>
+                            </>
                         }
-                    </>}
-                    {numberStatus === -1 && <>
-                        <p style= {{ color: '#31727a', fontWeight: 'bold', fontSize: '20px', marginTop: '50px',  marginBottom: '20px' }}>
-                            Passo 1:
-                        </p>
-                        <div>
-                            <p style= {{ backgroundColor: '#FFF', padding: '20px', borderRadius: '20px', fontFamily: 'Helvetica, sans-serif', color: '#31727a', fontWeight: 'bold', fontSize: '20px',   marginBottom: '40px' }}>
-                            Coloque os arquivos .GERBER dentro da pasta chamada GERBER
-                                <br></br><br></br>
-                                Os arquivos deverão seguir o padrão de nomenclatura seguinte:
-                                <br></br><br></br>
-                                Gerber_TopLayer.GTL<br></br>
-                                Gerber_BottomLayer.GBL<br></br>
-                                Gerber_BoardOutlineLayer.GKO<br></br>
-                            </p>
-                        </div>
-                        <p style= {{ color: '#31727a', fontWeight: 'bold', fontSize: '20px', marginTop: '50px',  marginBottom: '20px' }}>
-                            Passo 2:
-                        </p>
-                        <div>
-                            <p style= {{ backgroundColor: '#FFF', padding: '20px', borderRadius: '20px', fontFamily: 'Helvetica, sans-serif', color: '#31727a', fontWeight: 'bold', fontSize: '20px',   marginBottom: '40px' }}>
-                            Com os arquivos seguindo a nomenclatura correta e estando dentro da pasta, rode o seguinte comando para liberar a permissão de execução do arquivo de conversão:
-                                <br></br><br></br>
-                            <div style= {{ marginLeft: '23%', width: '50%', backgroundColor: '#ddd', padding: '10px', borderRadius: '10px', fontFamily: 'Helvetica, sans-serif', color: '#31727a', fontWeight: 'bold', fontSize: '20px'}}>
-                                 chmod +x convert.sh
-                            </div>
-                            </p>
-                        </div>
-                        <p style= {{ color: '#31727a', fontWeight: 'bold', fontSize: '20px', marginTop: '50px',  marginBottom: '20px' }}>
-                            Passo 3:
-                        </p>
-                        <div>
-                            <p style= {{ backgroundColor: '#FFF', padding: '20px', borderRadius: '20px', fontFamily: 'Helvetica, sans-serif', color: '#31727a', fontWeight: 'bold', fontSize: '20px',   marginBottom: '40px' }}>
-                            Execute o script CONVERT através do seguinte comando:
-                                <br></br><br></br>
-                            <div style= {{ marginLeft: '23%', width: '50%', backgroundColor: '#ddd', padding: '10px', borderRadius: '10px', fontFamily: 'Helvetica, sans-serif', color: '#31727a', fontWeight: 'bold', fontSize: '20px'}}>
-                                ./convert.sh
-                            </div>
-                            </p>
-                        </div>
-                        <p style= {{ color: '#31727a', fontWeight: 'bold', fontSize: '20px', marginTop: '50px',  marginBottom: '20px' }}>
-                            Passo Final:
-                        </p>
-                        <div>
-                            <p style= {{ backgroundColor: '#FFF', padding: '20px', borderRadius: '20px', fontFamily: 'Helvetica, sans-serif', color: '#31727a', fontWeight: 'bold', fontSize: '20px',   marginBottom: '40px' }}>
-                            Após a execução do script, os arquivos GCODE serão gerados na pasta GCODE, com os nomes abaixo:
-                                <br></br><br></br>
-                                Top.gcode<br></br>
-                                Bottom.gcode<br></br>
-                                Outline.gcode<br></br>
-                                <br></br>
-                                <br></br>
-                           Será gerado um arquivo chamado gcode.ZIP. Esse será o arquivo para você enviar na próxima etapa!
-                            </p>
-                        </div>
-                            <button className="btn" onClick={handleNextStep}>Já fiz isso!</button>
                     </>}
                 </div>
             </div>
