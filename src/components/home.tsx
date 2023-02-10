@@ -38,7 +38,7 @@ export function Home() {
     const [fullProgress, setFullProgress] = useState(false);
 
     //Controlar se há alguma interrupção no processo
-    const [warning, setWarning] = useState(true);
+    const [warning, setWarning] = useState(false);
 
     //TESTAR PORCENTAGEM DE PROGRESSO e ALERTA NO PROCESSO
     const warningProcess = false;
@@ -167,18 +167,18 @@ export function Home() {
     // -------------------------------------- FEEDBACK ------------------------------------------------- //
     
     //Função para ler a porcentagem de progresso da marcação da PCB
-    // useEffect(() => {
-    //     async function getFeedback() {
-    //         const response = await api.get('/feedback');
+    useEffect(() => {
+        async function getFeedback() {
+            const response = await api.get('/feedback');
 
-    //         setProgress(response.data.percentage)
-    //     }
+            setProgress(response.data.percentage)
+        }
 
-    //     FullProgress();
-    //     WarningProcess();
-    //     getFeedback();
-    //     // setProgress(progressPCB)
-    // },[]);
+        FullProgress();
+        WarningProcess();
+        getFeedback();
+        // setProgress(progressPCB)
+    },[]);
 
     
     // Função para verificar finalização do processo
