@@ -1,7 +1,13 @@
 import { Router } from 'express';
 import { convertToPng, convertToGcode } from './conversionMethods.js';
+<<<<<<< HEAD
 import util from 'util';
 import {mkdir, rm} from 'fs/promises';
+=======
+import path from 'path';
+import util from 'util';
+import fs, {mkdir, rm} from 'fs/promises';
+>>>>>>> 868363f57614495bd7312a0e28ef56ccbd2ae874
 const routes = new Router();
 
 routes.post('/file', async (req, res) => {
