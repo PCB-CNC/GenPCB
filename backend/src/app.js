@@ -1,7 +1,8 @@
 import express from 'express';
-import routes from './routes';
+import routes from './routes.js';
 import cors from 'cors';
-import bodyParser from 'body-parser';
+import fileUploaded from 'express-fileupload'
+// import bodyParser from 'body-parser';
 
 class App {
   constructor() {
@@ -13,8 +14,10 @@ class App {
 
   middlewares() {
     this.server.use(cors());
-    // this.server.use(express.json());
+    this.server.use(express.json());
     this.server.use(express.text());
+    this.server.use(express.urlencoded({ extended: true}))
+    this.server.use(fileUploaded());
     // this.server.use(bodyParser.json({limit: '3000kb'}))
   }
 
