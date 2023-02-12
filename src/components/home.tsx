@@ -4,8 +4,7 @@ import { FcOk, FcExpired, FcDocument } from 'react-icons/fc'
 
 import api from '../services/api'
 
-
-import { sendFileString } from '../services/FileStringRequest'
+import { sendFileString, convertToGcode } from '../services/FileRequests'
 
 import {ProgressBar} from './progressBar'
 import "../assets/index.css"
@@ -89,6 +88,13 @@ export function Home() {
             file && setSelectedFilesList(files => [...files, file]);
             console.log([...selectedFilesList, file])
 
+            console.log('esse e o arquivo')
+            console.log(file)
+
+            const formData = new FormData();
+            file && formData.append("filename", file);
+
+            formData && convertToGcode(formData)
             const reader = new FileReader();
 
             file && reader.readAsText(file);
