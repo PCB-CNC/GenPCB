@@ -1,6 +1,4 @@
 {
-  "name": "ReadStringOfFile",
-  "version": "1.0.0",
   "main": "src/server.js",
   "license": "MIT",
   "scripts": {
@@ -8,10 +6,23 @@
     "dev:debug": "nodemon --inspect"
   },
   "dependencies": {
-    "body-parser": "^1.20.1",
+    "@tracespace/core": "^5.0.0-alpha.0",
+    "@tracespace/identify-layers": "^5.0.0-alpha.0",
+    "@tracespace/parser": "^5.0.0-alpha.0",
+    "@tracespace/plotter": "^5.0.0-alpha.0",
+    "@tracespace/renderer": "^5.0.0-alpha.0",
+    "canvas": "^2.11.0",
     "cors": "^2.8.5",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.0",
+    "fs.promises": "^0.1.2",
+    "hast-util-to-html": "^8.0.4",
+    "img2gcode": "^1.2.0",
+    "progress": "^2.0.3",
+    "sharp": "^0.31.3",
+    "svg2png": "^4.1.1"
   },
+  "type": "module",
   "devDependencies": {
     "nodemon": "^2.0.20",
     "sucrase": "^3.29.0"
