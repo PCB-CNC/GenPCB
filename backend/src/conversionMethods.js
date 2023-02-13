@@ -74,7 +74,7 @@ const convertToGcode = () => {
   .then((data) => {
     console.log(data.config);
     console.log(data.dirgcode);
-    // gerberFileString()
+    gerberFileString()
   });  
 }
 
