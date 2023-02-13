@@ -45,6 +45,10 @@ const convertToPng = async (file) => {
   await Promise.all([
     svg=toHtml(elements[0]),
     await sharp(Buffer.from(svg), { density: 100 }).png().toFile("output.png")
+    .catch((error) => {
+      console.log('------------ Ocorreu algum erro na conversão... ------------')
+      console.error(error);
+    })
   ]) 
 }
 
@@ -70,7 +74,7 @@ const convertToGcode = () => {
   .then((data) => {
     console.log(data.config);
     console.log(data.dirgcode);
-    gerberFileString()
+    // gerberFileString()
   });  
 }
 
