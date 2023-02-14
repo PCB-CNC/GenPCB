@@ -33,6 +33,9 @@ export function Home() {
     //Controlar a porcentagem de andamento do processo
     const [progress, setProgress] = useState(0);
 
+    //Controlar a porcentagem de andamento do processo
+    const [gcode, setGcode] = useState('');
+
     //Controlar se o processo foi finalizado
     const [fullProgress, setFullProgress] = useState(false);
 
@@ -67,19 +70,6 @@ export function Home() {
         }
     }
 
-    // Enviando o conteúdo STRING do arquivo selecionado através da requisição
-    const sendFile = async (fileString: string) => {
-        const res = await sendFileString(fileString)
-        
-        if(res.status === 200) {
-            console.log("------------- STRING ENVIADA! -------------")
-            console.log(res.data)
-        } else {
-            console.log("------------- OCORREU UM ERRO! -------------")
-            console.log(res.status)
-        }
-    }
-
     // Seleção dos arquivos extraídos da pasta ZIP, adicionando-os à um array de files
     const handleChangeChecked = (e: ChangeEvent<HTMLInputElement>) => {
 
@@ -99,22 +89,54 @@ export function Home() {
 
             file && reader.readAsText(file);
             reader.onloadend = () => {
-
-                console.log("ESSA É A STRING DO ARQUIVO SELECIONADO")
-                const fileContentString = reader.result?.toString()
-                fileContentString && setFileContent(fileContentString)
-                console.log(fileContentString)
-        
-        }
+                // console.log("ESSA É A STRING DO ARQUIVO SELECIONADO")
+                // const fileContentString = reader.result?.toString()
+                // fileContentString && setFileContent(fileContentString)
+                // console.log(fileContentString)
+            }
       } else {
         const newListWithoutItem = selectedFilesList.filter(f => f.name !== e.target.name)
         setSelectedFilesList(newListWithoutItem)
         console.log(newListWithoutItem)
-
       }
     }
 
-    
+    const getGcodeString = () => {
+
+        // Função para salvar a string do GCODE no state FileContent, para ser enviado na requisição
+        function lerArquivo(path: string) {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", path, false);
+            xhr.send();
+            return xhr.responseText;
+        }
+        
+
+        const stringGCODE = lerArquivo("/backend/string_gcode.txt");
+        setFileContent(stringGCODE);
+        console.log(stringGCODE)
+    }
+
+
+    // Enviando o conteúdo STRING do arquivo selecionado através da requisição
+    const sendFile = async (fileString: string) => {
+        const res = await sendFileString(fileString)
+        
+        if(res.status === 200) {
+            console.log("------------- STRING ENVIADA! -------------")
+            console.log(res.data)
+        } else {
+            console.log("------------- OCORREU UM ERRO! -------------")
+            console.log(res.status)
+        }
+    }
+
+    function getStringAndSend() {
+        getGcodeString()
+        handlePostRequisition()
+    }
+
+    // Função para chamar a requisição de envio da string
     async function handlePostRequisition() {
         sendFile(fileContent)
         setNumberStatus(5)
@@ -169,6 +191,7 @@ export function Home() {
     const handleSendMore = () => {
         setNumberStatus(2)
         setSelectedFilesList([])
+        setFileContent('')
     }
 
     // Após finalização de alguma marcação, o usuário poderá voltar para selecionar/enviar mais arquivos para marcação
@@ -196,6 +219,7 @@ export function Home() {
         FullProgress();
         WarningProcess();
         getFeedback();
+
         // setProgress(progressPCB)
     },[]);
 
@@ -338,7 +362,7 @@ export function Home() {
                           <p style={{color: '#2B676F', fontWeight: 'bold', fontSize: '25px'}} key={files.name}>{files.name}</p>
                         )}
                             {/* <button className="btn" onClick={handlePreviousStep}>Selecionar mais arquivos</button> */}
-                            <button className="btn" onClick={handlePostRequisition}>Exportar</button>
+                            <button className="btn" onClick={getStringAndSend}>Exportar</button>
                     </>}
 
                     {numberStatus === 5 && <>

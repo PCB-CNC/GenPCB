@@ -11,12 +11,21 @@ import fs from 'fs'
 
 const gerberFileString = () => {
   fs.readFile('output.gcode', 'utf8', (err, data) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    console.log(data)
-  });
+      const stringConvert = data.toString()  
+
+      if(!fs.existsSync('./string_gcode.txt')) { 
+        fs.writeFile('string_gcode.txt', stringConvert, function (err) {
+          if (err) throw err;
+          console.log('String salva com sucesso!');
+        });
+      } else {
+        fs.unlinkSync('./string_gcode.txt')
+        fs.writeFile('string_gcode.txt', stringConvert, function (err) {
+          if (err) throw err;
+          console.log('String salva com sucesso!');
+        });
+      }
+    });
 }
 
 const convertToPng = async (file) => {
@@ -74,7 +83,7 @@ const convertToGcode = () => {
   .then((data) => {
     console.log(data.config);
     console.log(data.dirgcode);
-    gerberFileString()
+    gerberFileString();
   });  
 }
 
