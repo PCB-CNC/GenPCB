@@ -4,8 +4,7 @@ import { FcOk, FcExpired, FcDocument } from 'react-icons/fc'
 
 import api from '../services/api'
 
-
-import { sendFileString } from '../services/FileStringRequest'
+import { sendFileString, convertToGcode } from '../services/FileRequests'
 
 import {ProgressBar} from './progressBar'
 import "../assets/index.css"
@@ -33,6 +32,9 @@ export function Home() {
 
     //Controlar a porcentagem de andamento do processo
     const [progress, setProgress] = useState(0);
+
+    //Controlar a porcentagem de andamento do processo
+    const [gcode, setGcode] = useState('');
 
     //Controlar se o processo foi finalizado
     const [fullProgress, setFullProgress] = useState(false);
@@ -68,6 +70,37 @@ export function Home() {
         }
     }
 
+    // Seleção dos arquivos extraídos da pasta ZIP, adicionando-os à um array de files
+    const handleChangeChecked = (e: ChangeEvent<HTMLInputElement>) => {
+
+        if(e.target.checked) {
+            const file = filesList.find(f => f.name === e.target.name)
+            file && setSelectedFilesList(files => [...files, file]);
+            console.log([...selectedFilesList, file])
+
+            console.log('esse e o arquivo')
+            console.log(file)
+
+            const formData = new FormData();
+            // file && formData.append("filename", file);
+
+            // formData && convertToGcode(formData)
+            const reader = new FileReader();
+
+            file && reader.readAsText(file);
+            reader.onloadend = () => {
+                console.log("ESSA É A STRING DO ARQUIVO SELECIONADO")
+                const fileContentString = reader.result?.toString()
+                fileContentString && setFileContent(fileContentString)
+                console.log(fileContentString)
+            }
+      } else {
+        const newListWithoutItem = selectedFilesList.filter(f => f.name !== e.target.name)
+        setSelectedFilesList(newListWithoutItem)
+        console.log(newListWithoutItem)
+      }
+    }
+
     // Enviando o conteúdo STRING do arquivo selecionado através da requisição
     const sendFile = async (fileString: string) => {
         const res = await sendFileString(fileString)
@@ -81,34 +114,12 @@ export function Home() {
         }
     }
 
-    // Seleção dos arquivos extraídos da pasta ZIP, adicionando-os à um array de files
-    const handleChangeChecked = (e: ChangeEvent<HTMLInputElement>) => {
+    // function getStringAndSend() {
+    //     getGcodeString()
+    //     handlePostRequisition()
+    // }
 
-        if(e.target.checked) {
-            const file = filesList.find(f => f.name === e.target.name)
-            file && setSelectedFilesList(files => [...files, file]);
-            console.log([...selectedFilesList, file])
-
-            const reader = new FileReader();
-
-            file && reader.readAsText(file);
-            reader.onloadend = () => {
-
-                console.log("ESSA É A STRING DO ARQUIVO SELECIONADO")
-                const fileContentString = reader.result?.toString()
-                fileContentString && setFileContent(fileContentString)
-                console.log(fileContentString)
-        
-        }
-      } else {
-        const newListWithoutItem = selectedFilesList.filter(f => f.name !== e.target.name)
-        setSelectedFilesList(newListWithoutItem)
-        console.log(newListWithoutItem)
-
-      }
-    }
-
-    
+    // Função para chamar a requisição de envio da string
     async function handlePostRequisition() {
         sendFile(fileContent)
         setNumberStatus(5)
@@ -163,6 +174,7 @@ export function Home() {
     const handleSendMore = () => {
         setNumberStatus(2)
         setSelectedFilesList([])
+        setFileContent('')
     }
 
     // Após finalização de alguma marcação, o usuário poderá voltar para selecionar/enviar mais arquivos para marcação
@@ -181,15 +193,17 @@ export function Home() {
     
     //Função para ler a porcentagem de progresso da marcação da PCB
     useEffect(() => {
-        async function getFeedback() {
-            const response = await api.get('/feedback');
+        if (numberStatus === 5) {
+            async function getFeedback() {
+                const response = await api.get('/feedback');
 
-            setProgress(response.data.percentage)
+                setProgress(response.data.percentage)
+            }
+
+            FullProgress();
+            WarningProcess();
+            getFeedback();
         }
-
-        FullProgress();
-        WarningProcess();
-        getFeedback();
         // setProgress(progressPCB)
     },[]);
 
