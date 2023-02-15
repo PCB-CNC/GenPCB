@@ -1,7 +1,8 @@
 import api from './api'
+import esp from './esp'
 
 const sendFileString = (fileString: string) => {
-  return api.post('/file', fileString, {
+  return esp.post('/file', fileString, {
     headers: {
       'Content-Type': 'text/plain'
     }
